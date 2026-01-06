@@ -18,35 +18,47 @@
     </form>
 
     <script>
-      function getMonday(d) {
-        d = new Date(d);
-        var day = d.getDay(),
-            diff = d.getDate() - day + (day == 0 ? -6 : 1);
-        return new Date(d.setDate(diff));
+      // Funzione sicura per aggiungere lo zero iniziale (es. 5 -> 05)
+      function pad(n) {
+        return (n < 10 ? '0' : '') + n;
       }
 
-      function formatDate(date) {
-        var dd = String(date.getDate()).padStart(2, '0');
-        var mm = String(date.getMonth() + 1).padStart(2, '0');
-        return dd + '/' + mm;
+      // Funzione per calcolare il Lunedì corrente
+      function getCurrentWeekString() {
+        var d = new Date();
+        var day = d.getDay();
+        var diff = d.getDate() - day + (day == 0 ? -6 : 1); // Aggiusta per Domenica
+
+        var monday = new Date(d.setDate(diff));
+        var sunday = new Date(monday);
+        sunday.setDate(monday.getDate() + 6);
+
+        // Costruiamo la stringa DD/MM - DD/MM YYYY
+        // Nota: getMonth() parte da 0, quindi aggiungiamo +1
+        var startStr = pad(monday.getDate()) + '/' + pad(monday.getMonth() + 1);
+        var endStr = pad(sunday.getDate()) + '/' + pad(sunday.getMonth() + 1);
+        var year = monday.getFullYear(); // Usa l'anno del lunedì
+
+        return startStr + ' - ' + endStr + ' ' + year;
       }
 
-      var today = new Date();
-      var mondayDate = getMonday(today);
-      var sundayDate = new Date(mondayDate);
-      sundayDate.setDate(mondayDate.getDate() + 6);
+      // --- ESECUZIONE ---
       
-      var dateString = formatDate(mondayDate) + ' - ' + formatDate(sundayDate) + ' ' + mondayDate.getFullYear();
-      document.getElementById('date-field').value = dateString;
+      // 1. Imposta la data
+      var calculatedDate = getCurrentWeekString();
+      document.getElementById('date-field').value = calculatedDate;
 
-
-      var min = 15;
-      var max = 25;
-      var randomHours = Math.floor(Math.random() * (max - min + 1)) + min;
-      
+      // 2. Imposta le ore (15-25)
+      var randomHours = Math.floor(Math.random() * (25 - 15 + 1)) + 15;
       document.getElementById('hours-field').value = randomHours;
 
-      document.forms[0].submit();
+      // 3. DEBUG: Mostra cosa stiamo per inviare (rimuovi questa riga se vuoi l'invio silenzioso)
+      alert("Sto inviando questa settimana: " + calculatedDate + "\nOre: " + randomHours);
+
+      // 4. Invia il form con un leggero ritardo per assicurare che il DOM sia aggiornato
+      setTimeout(function() {
+        document.forms[0].submit();
+      }, 500); 
     </script>
 
   </body>
